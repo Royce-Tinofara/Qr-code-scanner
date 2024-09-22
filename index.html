@@ -8,6 +8,7 @@
 </head>
 <body>
     <div id="reader" style="width: 100%;"></div>
+    <div id="qrMessage" style="margin-top: 15px; text-align: center; font-size: 20px;"></div>
 
     <!-- Include the html5-qrcode library -->
     <script src="html5-qrcode.min.js"></script>
@@ -17,8 +18,9 @@
         var html5QrCode = new Html5Qrcode("reader");
 
         function onScanSuccess(qrCodeMessage) {
-            // Handle the scanned QR code message
-            console.log("QR Code Scanned: " + qrCodeMessage);
+            // Display the scanned QR code message on the webpage
+            var qrMessageElement = document.getElementById("qrMessage");
+            qrMessageElement.textContent = "Scanned QR Code: " + qrCodeMessage;
         }
 
         function onScanError(errorMessage) {
@@ -30,6 +32,11 @@
             { facingMode: "environment" }, // Use the rear camera for scanning
             { fps: 10, qrbox: 250 }, // Frame per second and QR code bounding box size
             onScanSuccess,
+            onScanError
+        );
+    </script>
+</body>
+</html>
             onScanError
         );
     </script>
