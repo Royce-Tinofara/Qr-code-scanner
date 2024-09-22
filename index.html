@@ -7,45 +7,31 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <video id="preview" width="600" height="400"></video>
-    <div id="result"></div>
+    <div id="reader" style="width: 100%;"></div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-decoder-js/1.0.0/qrcode-decoder.min.js"></script>
+    <!-- Include the html5-qrcode library -->
+    <script src="html5-qrcode.min.js"></script>
+
     <script>
-        const video = document.getElementById('preview');
-        const resultContainer = document.getElementById('result');
-        const qrDecoder = new QDecoder();
+        // Start QR code scanner
+        var html5QrCode = new Html5Qrcode("reader");
 
-        // Start video stream
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-            .then(stream => {
-                video.srcObject = stream;
-                video.setAttribute('playsinline', true); // Required for iOS
-                video.play();
-                requestAnimationFrame(tick);
-            })
-            .catch(err => {
-                console.error("Error accessing camera: ", err);
-            });
-
-        // Continuously scan for QR codes
-        function tick() {
-            if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-                
-                qrDecoder.decode(canvas.toDataURL('image/png'))
-                    .then(result => {
-                        resultContainer.innerText = `QR Code detected: ${result}`;
-                    })
-                    .catch(err => {
-                        // Ignore errors, continue scanning
-                    });
-            }
-            requestAnimationFrame(tick);
+        function onScanSuccess(qrCodeMessage) {
+            // Handle the scanned QR code message
+            console.log("QR Code Scanned: " + qrCodeMessage);
         }
+
+        function onScanError(errorMessage) {
+            // Handle any errors that occur during scanning
+            console.error(errorMessage);
+        }
+
+        html5QrCode.start(
+            { facingMode: "environment" }, // Use the rear camera for scanning
+            { fps: 10, qrbox: 250 }, // Frame per second and QR code bounding box size
+            onScanSuccess,
+            onScanError
+        );
     </script>
 </body>
 </html>
