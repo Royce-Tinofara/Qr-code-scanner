@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <video id="preview" width="600" height="400"></video>
+    <div id="result"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-decoder-js/1.0.0/qrcode-decoder.min.js"></script>
+    <script>
+        const video = document.getElementById('preview');
+        const resultContainer = document.getElementById('result');
+        const qrDecoder = new QDecoder();
+
+        // Start video stream
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(stream => {
+                video.srcObject = stream;
+                video.setAttribute('playsinline', true); // Required for iOS
+                video.play();
+                requestAnimationFrame(tick);
+            })
+            .catch(err => {
+                console.error("Error accessing camera: ", err);
+            });
+
+        // Continuously scan for QR codes
+        function tick() {
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                qrDecoder.decode(canvas.toDataURL('image/png'))
+                    .then(result => {
+                        resultContainer.innerText = `QR Code detected: ${result}`;
+                    })
+                    .catch(err => {
+                        // Ignore errors, continue scanning
+                    });
+            }
+            requestAnimationFrame(tick);
+        }
+    </script>
+</body>
+</html>
