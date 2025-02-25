@@ -1,7 +1,7 @@
 // Mock data for member validation
 const members = {
-  "63-3365676B05": { name: "Royce Nhumburudzi", id: "63-3365676B05", subscriptionValid: true },
-  "67890": { name: "Jane Smith", id: "67890", subscriptionValid: false }
+  "12345": { name: "Royce Nhumburudzi", id: "12345", subscriptionValid: true },
+  "67890": { name: "Leeroy Guri", id: "67890", subscriptionValid: false }
 };
 
 const entryLog = [];
