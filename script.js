@@ -2,7 +2,7 @@
 const members = {
   "12345": { name: "Royce Nhumburudzi", id: "12345", subscriptionValid: true },
   "67890": { name: "Leeroy Guri", id: "67890", subscriptionValid: true },
-  "54321": { name: "Takunda Kabvunye", id: "54321", subscriptionValid: true },
+   "123456": { name: "Takunda Kabvunye", id: "123456", subscriptionValid: true },
 };
 
 const entryLog = [];
